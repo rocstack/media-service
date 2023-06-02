@@ -2,27 +2,31 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"path/filepath"
-	"strings"
+	"log"
 )
 
 func main() {
 	fmt.Println("Starting scan...")
-	root := filepath.Join("..", "music")
-	fmt.Println(root)
-	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			fmt.Printf("prevent panic by handling failure accessing a path %q: %v\n", path, err)
-			return err
-		}
-		if !info.IsDir() && strings.HasSuffix(strings.ToLower(info.Name()), ".mp3") {
-			fmt.Println(path)
-		}
-		return nil
-	})
+
+	// Scan the music directory
+	files, err := scan("../music")
 	if err != nil {
-		fmt.Printf("error walking the path %v: %v\n", root, err)
-		return
+		log.Fatal(err)
 	}
+
+	// fmt.Println(files)
+
+	fmt.Println("Found files:", len(files))
+
+	fmt.Println("Extracting metadata...")
+
+	extractMetadata(files)
+
+	// For each found file, extract artist name, album name, and song name
+
+	// Index found music files to the database
+
+	// Create a new artist if it doesn't exist
+
+	// Add metadata to the database
 }
